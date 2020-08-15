@@ -5,6 +5,7 @@ from Negocio.Buses import Buses
 from Negocio.SondaWS import SondaWS
 from Negocio.UltimasTransmisiones import UltimasTransmisiones
 from Negocio.Tracktec import Tracktec
+from Negocio.geocerca_maipu import geocerca_maipu
 import numpy
 from numpy import arctan2,random,sin,cos,degrees,deg2rad, rad2deg
 import ast
@@ -24,6 +25,8 @@ class Main:
     print(buses)
     busesMemoria = []
     if len(buses)>0:
+      #inicializa función de los cerdos
+      geocercas = geocerca_maipu()
       for bus in buses:
         patente = bus["ppu"]
         print(patente)
@@ -62,7 +65,14 @@ class Main:
             SOC = 0
             SOC = Tracktec().SOC(patente)
 
-            actualiza = UltimasTransmisiones().ActualizaPantente(patente, pto2_latitud , pto2_longitud, pto2_fecha,pto2_hora, busLatitud, busLongitud, fecha, hora, busServicio,busSentido, brujula , busSS, SOC)
+            #punto_1 = [busLatitud, busLongitud]
+            #punto_2 = [pto2_latitud, pto2_longitud]
+            
+            x = geocercas.cumple_geocerca_maipu(float(busLatitud),float(busLongitud))
+            x2 = geocercas.cumple_geocerca_maipu(float(pto2_latitud),float(pto2_longitud))
+            
+ 
+            actualiza = UltimasTransmisiones().ActualizaPantente(patente, pto2_latitud , pto2_longitud, pto2_fecha,pto2_hora, busLatitud, busLongitud, fecha, hora, busServicio,busSentido, brujula , busSS, SOC, x,x2)
                                                              
       #print(busesArreglo)   
 
@@ -79,6 +89,8 @@ class Main:
       return angle_dir
     except error:
       print(error)    
+
+  
 
 Main()
 
