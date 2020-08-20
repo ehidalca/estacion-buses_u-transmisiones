@@ -54,6 +54,19 @@ class ConexionMy():
                 print (inst)
                 raise ValueError(str(inst))
         db.close()
+      
+    def EjecutaQueryN(self, query):
+        db =pymysql.connect(self.servidor,self.usuario,self.password,self.baseDatos)
+        cursor = db.cursor()
+        try:
+            cursor.execute(query)
+            db.commit()
+            return True
+        except Exception as inst:
+                db.rollback
+                print (inst)
+                raise ValueError(str(inst))
+        db.close()
         
     def EjecutaQueryId(self, query, datos):
         db =pymysql.connect(self.servidor,self.usuario,self.password,self.baseDatos)

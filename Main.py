@@ -19,17 +19,16 @@ class Main:
       time.sleep(60)
    
   def Proceso(self):
-
     fecha = datetime.now().replace(microsecond=0)   
     buses = Buses().Listar()
-    print(buses)
+    #print(buses)
     busesMemoria = []
     if len(buses)>0:
       #inicializa función de los cerdos
       geocercas = geocerca_maipu()
       for bus in buses:
         patente = bus["ppu"]
-        print(patente)
+        #print(patente)
         datosSonda = SondaWS().UltimaTransmisionPorBus(patente)
         if len(datosSonda) > 0:
           #print(datosSonda)
@@ -39,11 +38,9 @@ class Main:
           busServicio = datosSonda[0]["servicio"]
           busSentido = datosSonda[0]["sentido"]
           busSS = str(datosSonda[0]["servicio_sentido_a_bordo_del_bus"])
-          print(busServicio)
-          print(busSentido)
-          print(busSS)
+          
           #buses.append(transmision)
-  
+          #datos de sonda
           ut = UltimasTransmisiones().ConsultaPorPantente(patente)
           if len(ut)>0:  
             #pto1_latitud  = ut[0]["pto1_latitud"]
@@ -56,24 +53,32 @@ class Main:
             fechaHora = datetime.now().replace(microsecond=0) 
             fecha = str(fechaHora.date())
             hora  = str(fechaHora.time())
+
             brujula = 0 
             if pto2_latitud is not None:
               brujula = self.Brujula(float(pto2_latitud),float(pto2_longitud),float(busLatitud),float(busLongitud))
               brujula = round(brujula,2)
             
-            #obtengo SOC desde ultimas tranmisiones de tracktec
-            SOC = 0
-            SOC = Tracktec().SOC(patente)
-
-            #punto_1 = [busLatitud, busLongitud]
-            #punto_2 = [pto2_latitud, pto2_longitud]
-            
-            x = geocercas.cumple_geocerca_maipu(float(busLatitud),float(busLongitud))
-            x2 = geocercas.cumple_geocerca_maipu(float(pto2_latitud),float(pto2_longitud))
-            
- 
-            actualiza = UltimasTransmisiones().ActualizaPantente(patente, pto2_latitud , pto2_longitud, pto2_fecha,pto2_hora, busLatitud, busLongitud, fecha, hora, busServicio,busSentido, brujula , busSS, SOC, x,x2)
-                                                             
+          #datos de tracktec 
+          SOC= None
+          tracktecLatitud = None
+          tracktecLongitud = None
+          datosTracktec = Tracktec().UltimaTransmision(patente)
+          if len(datosTracktec) > 0:
+            SOC = datosTracktec[0]["carga"]
+            tracktecLatitud = datosTracktec[0]["latitud"]
+            tracktecLongitud = datosTracktec[0]["longitud"]
+            tracktecFechaHora = str(datosTracktec[0]["fecha_evento"]) + " " + str(datosTracktec[0]["hora_evento"]) 
+            #print(tracktecFechaHora)
+          
+          try:
+              x = geocercas.cumple_geocerca_maipu(float(busLatitud),float(busLongitud))
+              x2 = geocercas.cumple_geocerca_maipu(float(pto2_latitud),float(pto2_longitud))
+          except:
+              x=0
+              x2 =0
+          actualiza = UltimasTransmisiones().ActualizaPantente(patente, pto2_latitud , pto2_longitud, pto2_fecha,pto2_hora, busLatitud, busLongitud, fecha, hora, busServicio,busSentido, brujula , busSS, SOC, x,x2, tracktecLatitud, tracktecLongitud, tracktecFechaHora)
+      #Buses().InsertaBusesProximos()                                                       
       #print(busesArreglo)   
 
   def Brujula(self, lt1, lg1, lt2, lg2):
@@ -91,6 +96,7 @@ class Main:
       print(error)    
 
   
+
 
 Main()
 
