@@ -62,9 +62,9 @@ class Buses():
             " FROM " + \
             " sonda_ultimas_transmisiones " + \
             " WHERE " + \
-            " brujula < -61 OR brujula > 147 " + \
+            " (brujula < -61 OR brujula > 147 " + \
             " AND dentro_geo_pto1 = 1 " + \
-            " AND dentro_geo_pto2 = 1 " + \
+            " AND dentro_geo_pto2 = 1 )" + \
             " AND ppu NOT IN (SELECT ppu FROM buses_llegando_maipu)) "
             return ConexionMy().EjecutaQueryN(query)
         except:

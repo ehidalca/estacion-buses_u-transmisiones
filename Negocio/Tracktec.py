@@ -3,7 +3,7 @@ from helpers.ConexionMy import ConexionMy
 class Tracktec:
     def UltimaTransmision(self,ppu):
         try:
-            print(ppu)
+           #print(ppu)
             parametros = (ppu)
             datos = ConexionMy().ConsultaQuery("select * from tracktec.ultimas_transmisiones where replace(patente,'-','') =%s", parametros)
             return datos

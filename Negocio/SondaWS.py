@@ -8,7 +8,8 @@ class SondaWS():
             fechaHora = datetime.now().replace(microsecond=0)  
             fecha = fechaHora.date()        
             parametros = ()
-            query = "SELECT * from ws_pos_dia_2019 where fecha ='"+ str(fecha) +"' AND REPLACE(patente,'-','') ='"+ patente +"'  limit 1"
+            query = "SELECT * from ws_pos_dia_2019 where fecha ='"+ str(fecha) +"' AND REPLACE(patente,'-','') ='"+ patente +"'  limit 2"
+            print(query)
             ultimaTransmision = ConexionPG().EjecutaConsulta(query)   
             return ultimaTransmision
         except: 
