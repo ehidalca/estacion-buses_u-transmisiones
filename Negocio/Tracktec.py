@@ -9,7 +9,15 @@ class Tracktec:
             return datos
         except Exception as ex:
             print("error"  +str(ex))
-      
+    
+    def TodasUltimasTransmisiones(self):
+        try:
+           #print(ppu)
+            parametros =()
+            datos = ConexionMy().ConsultaQuery("SELECT patente, carga,odometro,latitud,longitud, fecha_evento, hora_evento  FROM tracktec.ultimas_transmisiones order by patente; ", parametros)
+            return datos
+        except Exception as ex:
+            print("error"  +str(ex))
     
     def SOC(self,ppu):
         SOC="0"

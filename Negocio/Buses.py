@@ -5,7 +5,7 @@ class Buses():
     def Listar(self):
         try:
             parametros = ()
-            query ="SELECT * FROM buses"
+            query ="SELECT * FROM buses order by ppu"
             busesDatos = ConexionMy().ConsultaQuery(query, parametros)   
             return busesDatos
         except: 

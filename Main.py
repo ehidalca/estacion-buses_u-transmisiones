@@ -16,74 +16,75 @@ class Main:
     
      while True:  
       self.Proceso()
-      time.sleep(60)
+      time.sleep(40)
    
   def Proceso(self):
-    fecha = datetime.now().replace(microsecond=0)   
+    fecha = datetime.now().replace(microsecond=0)  
+    print(str(fecha)) 
     buses = Buses().Listar()
     #print(buses)
     busesMemoria = []
     if len(buses)>0:
       #inicializa función de los cerdos
       geocercas = geocerca_maipu()
+      # = SondaWS().DatosJefe()
+      datosN = SondaWS().DatosJefe()
+      datosTracktec = Tracktec().TodasUltimasTransmisiones()
+      #print(datosN)
       for bus in buses:
         patente = bus["ppu"]
-        #print(patente)
-        datosSonda = SondaWS().UltimaTransmisionPorBus(patente)
-        if len(datosSonda) > 0:
-          #print(datosSonda)
-          busPatente = datosSonda[0]["patente"]
-          busLatitud = datosSonda[0]["latitudgps"]
-          busLongitud = datosSonda[0]["longitudgps"]
-          busServicio = datosSonda[0]["servicio"]
-          busSentido = datosSonda[0]["sentido"]
-          busFecha = datosSonda[0]["fecha"]
-          busHora = datosSonda[0]["hora"]
-          busSS = str(datosSonda[0]["servicio_sentido_a_bordo_del_bus"])
-          
-          #buses.append(transmision)
-          #datos de sonda
-          #ut = UltimasTransmisiones().ConsultaPorPantente(patente)
-          #if len(ut)>0:  
-            #pto1_latitud  = ut[0]["pto1_latitud"]
-            #pto1_longitud = ut[0]["pto1_longitud"]
-          pto2_latitud  = datosSonda[1]["latitudgps"]
-          pto2_longitud = datosSonda[1]["longitudgps"] 
-          pto2_fecha    = datosSonda[1]["fecha"]   
-          pto2_hora     = datosSonda[1]["hora"]  
+        datosSonda= []
+        for dato in datosN :
+          if patente == dato["patente"].replace("-",""): 
+            datosSonda   = dato
+            busPatente    = datosSonda["patente"]
+            busLatitud    = datosSonda["lat2"]
+            busLongitud   = datosSonda["lon2"]
+            busServicio   = datosSonda["serv"]
+            busSentido    = datosSonda["sent"]
+            busFecha      = datosSonda["fecha"]
+            busHora       = datosSonda["hora2"]
+            busSS         = str(datosSonda["consola"])
+            pto2_latitud  = datosSonda["lat1"]
+            pto2_longitud = datosSonda["long1"] 
+            pto2_fecha    = datosSonda["fecha"]   
+            pto2_hora     = datosSonda["hora1"]  
 
-          fechaHora = datetime.now().replace(microsecond=0) 
-          fecha = str(fechaHora.date())
-          hora  = str(fechaHora.time())
-
-          brujula = 0 
-          if pto2_latitud is not None:
-              brujula = self.Brujula(float(pto2_latitud),float(pto2_longitud),float(busLatitud),float(busLongitud))
-              brujula = round(brujula,2)
+            #función brujula 
+            brujula = 0 
+            if pto2_latitud is not None:
+               brujula = self.Brujula(float(pto2_latitud),float(pto2_longitud),float(busLatitud),float(busLongitud))
+               brujula = round(brujula,2)
             
-          #datos de tracktec 
-          SOC= None
-          tracktecLatitud = None
-          tracktecLongitud = None
-          tracktecFechaHora = None
-          datosTracktec = Tracktec().UltimaTransmision(patente)
+            #datos de tracktec 
+            SOC= None
+            tracktecLatitud = None
+            tracktecLongitud = None
+            tracktecFechaHora = None
+            odometro = None
           
-          if len(datosTracktec) > 0:
-            SOC = datosTracktec[0]["carga"]
-            tracktecLatitud = datosTracktec[0]["latitud"]
-            tracktecLongitud = datosTracktec[0]["longitud"]
-            tracktecFechaHora = str(datosTracktec[0]["fecha_evento"]) + " " + str(datosTracktec[0]["hora_evento"]) 
+            for tracktec in datosTracktec:
+              if tracktec["patente"].replace('-','')==patente:
+                #print("si")
+                SOC = tracktec["carga"]
+                odometro = tracktec["odometro"]
+                tracktecLatitud = tracktec["latitud"]
+                tracktecLongitud = tracktec["longitud"]
+                tracktecFechaHora = str(tracktec["fecha_evento"]) + " " + str(tracktec["hora_evento"]) 
+                break
             #print(tracktecFechaHora)
-          
-          try:
-              x = geocercas.cumple_geocerca_maipu(float(busLatitud),float(busLongitud))
-              x2 = geocercas.cumple_geocerca_maipu(float(pto2_latitud),float(pto2_longitud))
-          except:
-              x=0
-              x2 =0
-          actualiza = UltimasTransmisiones().ActualizaPantente(patente, pto2_latitud , pto2_longitud, pto2_fecha,pto2_hora, busLatitud, busLongitud, busFecha, busHora, busServicio,busSentido, brujula , busSS, SOC, x,x2, tracktecLatitud, tracktecLongitud, tracktecFechaHora)
+            try:
+               x = geocercas.cumple_geocerca_maipu(float(busLatitud),float(busLongitud))
+               x2 = geocercas.cumple_geocerca_maipu(float(pto2_latitud),float(pto2_longitud))
+            except:
+               x= 0
+               x2 = 0
+            actualiza = UltimasTransmisiones().ActualizaPantente(patente, pto2_latitud , pto2_longitud, pto2_fecha,pto2_hora, busLatitud, busLongitud, busFecha, busHora, busServicio,busSentido, brujula , busSS, SOC, x,x2, tracktecLatitud, tracktecLongitud, tracktecFechaHora, odometro)
+            break
       #Buses().InsertaBusesProximos()                                                       
       #print(busesArreglo)   
+      fecha = datetime.now().replace(microsecond=0)  
+      print("termino:" + str(fecha)) 
 
   def Brujula(self, lt1, lg1, lt2, lg2):
     try:
