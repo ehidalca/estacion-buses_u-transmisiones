@@ -24,7 +24,7 @@ class SondaWS():
             fecha = fechaHora.date()  
             hora = fechaHora.time()      
             parametros = ()
-            query = "SELECT * from ws_pos_dia_2019 where fecha ='"+ str(fecha) +"' and hora >='"+ str(hora) +"'"  
+            query = "SELECT * from ws_pos_dia_temp where fecha ='"+ str(fecha) +"' and hora >='"+ str(hora) +"'"  
             print(query)
             #print(query)
             ultimaTransmision = ConexionPG().EjecutaConsulta(query)   

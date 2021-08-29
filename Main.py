@@ -13,11 +13,14 @@ import ast
 
 class Main:
   def __init__(self):
-    
-     while True:  
-      self.Proceso()
-      time.sleep(40)
-   
+    try:
+      while True:  
+        self.Proceso()
+        time.sleep(40)
+    except:
+      while True:  
+        self.Proceso()
+        time.sleep(40)
   def Proceso(self):
     fecha = datetime.now().replace(microsecond=0)  
     print(str(fecha)) 
@@ -33,6 +36,8 @@ class Main:
       #print(datosN)
       for bus in buses:
         patente = bus["ppu"]
+        enEstudio = bus["en_estudio"]
+        #print(enEstudio)
         datosSonda= []
         for dato in datosN :
           if patente == dato["patente"].replace("-",""): 
@@ -79,7 +84,7 @@ class Main:
             except:
                x= 0
                x2 = 0
-            actualiza = UltimasTransmisiones().ActualizaPantente(patente, pto2_latitud , pto2_longitud, pto2_fecha,pto2_hora, busLatitud, busLongitud, busFecha, busHora, busServicio,busSentido, brujula , busSS, SOC, x,x2, tracktecLatitud, tracktecLongitud, tracktecFechaHora, odometro)
+            actualiza = UltimasTransmisiones().ActualizaPantente(patente, pto2_latitud , pto2_longitud, pto2_fecha,pto2_hora, busLatitud, busLongitud, busFecha, busHora, busServicio,busSentido, brujula , busSS, SOC, x,x2, tracktecLatitud, tracktecLongitud, tracktecFechaHora, odometro, enEstudio)
             break
       #Buses().InsertaBusesProximos()                                                       
       #print(busesArreglo)   
@@ -101,8 +106,9 @@ class Main:
       print(error)    
 
   
-
-
-Main()
-
+try:
+  Main()
+except :
+    Main()
+    
 

@@ -22,7 +22,7 @@ class Buses():
     
     def InsertaBusesProximos(self):
         try:
-            query = "INSERT INTO buses_llegando_maipu( " + \
+            query = "INSERT INTO buses_llegando_maipu(" + \
             " ppu,  " + \
             " bus_tipo,  " + \
             " pto1_fecha,  " + \
@@ -39,7 +39,8 @@ class Buses():
             " servicio_sentido_a_bordo_del_bus, " + \
             " tracktec_SOC, " + \
             " dentro_geo_pto1, " + \
-            " dentro_geo_pto2 " + \
+            " dentro_geo_pto2, " + \
+            " en_estudio " + \
             " )   " + \
             " (SELECT  " + \
             " ppu,  " + \
@@ -58,21 +59,22 @@ class Buses():
             " servicio_sentido_a_bordo_del_bus, " + \
             " tracktec_SOC, " + \
             " dentro_geo_pto1, " + \
-            " dentro_geo_pto2 " + \
+            " dentro_geo_pto2, " + \
+            " en_estudio " +\
             " FROM " + \
             " sonda_ultimas_transmisiones " + \
             " WHERE " + \
             " (brujula < - 61 OR brujula > 147)" + \
-            " AND (" + \
-            " dentro_geo_pto1 = 1" + \
-            " OR dentro_geo_pto2 = 1" +\
-            " AND ppu NOT IN (SELECT ppu FROM buses_llegando_maipu)))"
+            " AND (dentro_geo_pto1 = 1 OR dentro_geo_pto2 = 1)" + \
+            " AND (ppu NOT IN (SELECT ppu FROM buses_llegando_maipu)))"
+            #print(query)
             return ConexionMy().EjecutaQueryN(query)
         except:
             raise
    
     def EliminaRegistros(self):
          try:
+            print("elimina")
             query = "DELETE FROM buses_llegando_maipu"
             return ConexionMy().EjecutaQueryN(query)
          except:

@@ -12,16 +12,25 @@ class Main:
 
      while True:
        self.ProcesoDelete()
-       time.sleep(1800)
+       time.sleep(300)
    
   def Proceso(self):
-    fecha = datetime.now().replace(microsecond=0)   
-    proceso = Buses().InsertaBusesProximos()
-    print(proceso)
-  
+    try:
+      fecha = datetime.now().replace(microsecond=0)   
+      proceso = Buses().InsertaBusesProximos()
+      print(proceso)
+    except:
+      return   
   def ProcesoDelete(self):
-    proceso = buses().EliminaRegistros()
-  
-Main()
+    try:
+      x=0
+      proceso = buses().EliminaRegistros()
+    except:
+      return 
 
+try:
+  Main()
+except:
+  time.sleep(15)
+  Main()
 
