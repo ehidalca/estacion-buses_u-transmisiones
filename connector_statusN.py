@@ -74,7 +74,7 @@ def EstadoPistola( cargadorNombre, pistolaNro):
                 #print(datetime.now().replace(microsecond=0))
                 #print('codigo respuesta api estado pistola' + str(resp.status_code))
                 datos = resp.json()
-                #print(datos)
+                print(datos)
                 estado = datos["mensaje"]
                 #print(estado)
                 return estado

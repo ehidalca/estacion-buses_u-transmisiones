@@ -1,11 +1,12 @@
 from helpers.ConexionMy import ConexionMy
+from helpers.ConexionMyT import ConexionMyT
 
 class Tracktec:
     def UltimaTransmision(self,ppu):
         try:
            #print(ppu)
             parametros = (ppu)
-            datos = ConexionMy().ConsultaQuery("select * from tracktec.ultimas_transmisiones where replace(patente,'-','') =%s", parametros)
+            datos = ConexionMyT().ConsultaQuery("select * from tracktec.ultimas_transmisiones where replace(patente,'-','') =%s", parametros)
             return datos
         except Exception as ex:
             print("error"  +str(ex))
@@ -14,7 +15,7 @@ class Tracktec:
         try:
            #print(ppu)
             parametros =()
-            datos = ConexionMy().ConsultaQuery("SELECT patente, carga,odometro,latitud,longitud, fecha_evento, hora_evento  FROM tracktec.ultimas_transmisiones order by patente; ", parametros)
+            datos = ConexionMyT().ConsultaQuery("SELECT patente, carga,odometro,latitud,longitud, fecha_evento, hora_evento  FROM tracktec.ultimas_transmisiones order by patente; ", parametros)
             return datos
         except Exception as ex:
             print("error"  +str(ex))

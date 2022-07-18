@@ -33,6 +33,7 @@ class Main:
       # = SondaWS().DatosJefe()
       datosN = SondaWS().DatosJefe()
       datosTracktec = Tracktec().TodasUltimasTransmisiones()
+      print(datosTracktec)
       #print(datosN)
       for bus in buses:
         patente = bus["ppu"]
